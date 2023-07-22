@@ -6,7 +6,6 @@ plugins {
     id("org.jetbrains.compose")
     id("com.android.library")
     id("io.gitlab.arturbosch.detekt")
-    id("dev.icerock.mobile.multiplatform-resources")
     id("com.codingfeline.buildkonfig")
     `maven-publish`
 }
@@ -36,10 +35,6 @@ kotlin {
         }
 
         val commonMain by getting {
-            multiplatformResources {
-                multiplatformResourcesPackage = "com.arnyminerz.library.kmconnector"
-            }
-
             buildkonfig {
                 packageName = "com.arnyminerz.library.kmconnector"
 
@@ -129,6 +124,28 @@ val javadocJar by tasks.registering(Jar::class) {
     archiveClassifier.set("javadoc")
 }
 
+fun MavenPublication.setPomInformation() {
+    pom {
+        name.set("KM Connector")
+        description.set(
+            "A library that provides a way to have a common interface that connects different platforms."
+        )
+        url.set("https://github.com/ArnyminerZ/KM-Connector")
+        developers {
+            developer {
+                id.set("arnyminerz")
+                name.set("Arnau Mora")
+                email.set("arnyminerz@proton.me")
+            }
+        }
+        scm {
+            connection.set("scm:git:git://github.com/ArnyminerZ/KM-Connector.git")
+            developerConnection.set("scm:git:ssh://github.com/ArnyminerZ/KM-Connector.git")
+            url.set("https://github.com/ArnyminerZ/KM-Connector")
+        }
+    }
+}
+
 publishing {
     publications.withType<MavenPublication> {
         group = "com.arnyminerz.library.kmconnector"
@@ -136,24 +153,6 @@ publishing {
 
         artifact(javadocJar.get())
 
-        pom {
-            name.set("KM Connector")
-            description.set(
-                "A library that provides a way to have a common interface that connects different platforms."
-            )
-            url.set("https://github.com/ArnyminerZ/KM-Connector")
-            developers {
-                developer {
-                    id.set("arnyminerz")
-                    name.set("Arnau Mora")
-                    email.set("arnyminerz@proton.me")
-                }
-            }
-            scm {
-                connection.set("scm:git:git://github.com/ArnyminerZ/KM-Connector.git")
-                developerConnection.set("scm:git:ssh://github.com/ArnyminerZ/KM-Connector.git")
-                url.set("https://github.com/ArnyminerZ/KM-Connector")
-            }
-        }
+        setPomInformation()
     }
 }

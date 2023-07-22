@@ -18,6 +18,5 @@ plugins {
     id("com.android.library") apply false
     id("org.jetbrains.compose") apply false
     id("io.gitlab.arturbosch.detekt") apply false
-    id("dev.icerock.mobile.multiplatform-resources") apply false
     id("com.codingfeline.buildkonfig") apply false
 }

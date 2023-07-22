@@ -14,7 +14,6 @@ pluginManagement {
         id("com.android.library").version(extra["agp.version"] as String)
         id("org.jetbrains.compose").version(extra["compose.version"] as String)
         id("io.gitlab.arturbosch.detekt").version(extra["detekt.version"] as String)
-        id("dev.icerock.mobile.multiplatform-resources").version(extra["moko-resources.version"] as String)
         id("com.codingfeline.buildkonfig").version(extra["buildkonfig.version"] as String)
     }
 }
