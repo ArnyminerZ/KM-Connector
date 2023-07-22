@@ -3,6 +3,7 @@ package com.arnyminerz.library.kmconnector.ui.dialog
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.snapshots.SnapshotStateMap
 import androidx.compose.ui.unit.DpSize
 import com.arnyminerz.library.kmconnector.ui.dialog.data.DialogResult
 import com.arnyminerz.library.kmconnector.ui.dialog.data.DialogResultData
@@ -13,16 +14,18 @@ import java.util.UUID
 import kotlin.reflect.KClass
 
 actual abstract class DialogWindow actual constructor(
-    resizable: Boolean,
-    title: StringResource,
+    actual val resizable: Boolean,
+    actual val title: StringResource,
     actual val parentWindow: KClass<out RequestWindow>,
-    initialSize: DpSize
-): CommonWindowInterface(resizable, title, mutableStateMapOf(), initialSize) {
+    actual val initialSize: DpSize
+): CommonWindowInterface {
     actual companion object: CommonDialogCompanion() {
         @Suppress("UNCHECKED_CAST")
         val dialogs: List<Class<DialogWindow>>
             get() = DialogWindow::class.java.classes.map { it as Class<DialogWindow> }
     }
+
+    actual val extras: SnapshotStateMap<String, Any> = mutableStateMapOf()
 
     actual val visible: MutableState<Boolean> = mutableStateOf(false)
 

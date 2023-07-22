@@ -1,21 +1,24 @@
 package com.arnyminerz.library.kmconnector.ui.window
 
 import androidx.compose.runtime.mutableStateMapOf
+import androidx.compose.runtime.snapshots.SnapshotStateMap
 import androidx.compose.ui.unit.DpSize
 import com.arnyminerz.library.kmconnector.ui.window.CommonWindowCompanion.Companion.displayingWindow
 import dev.icerock.moko.resources.StringResource
 import kotlin.reflect.KClass
 
 actual abstract class RequestWindow actual constructor(
-    resizable: Boolean,
-    title: StringResource,
-    initialSize: DpSize
-): CommonWindowInterface(resizable, title, mutableStateMapOf(), initialSize) {
+    actual val resizable: Boolean,
+    actual val title: StringResource,
+    actual val initialSize: DpSize
+): CommonWindowInterface {
     actual companion object : CommonWindowCompanion() {
         @Suppress("UNCHECKED_CAST")
         val windows: List<Class<RequestWindow>>
             get() = RequestWindow::class.java.classes.map { it as Class<RequestWindow> }
     }
+
+    actual val extras: SnapshotStateMap<String, Any> = mutableStateMapOf()
 
     init {
         addBackListener()

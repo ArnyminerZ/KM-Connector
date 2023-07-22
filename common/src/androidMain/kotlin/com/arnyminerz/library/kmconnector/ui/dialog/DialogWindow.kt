@@ -5,9 +5,11 @@ import android.os.Build
 import android.os.Bundle
 import androidx.activity.compose.BackHandler
 import androidx.activity.compose.setContent
+import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.snapshots.SnapshotStateMap
 import androidx.compose.ui.unit.DpSize
 import com.arnyminerz.library.kmconnector.android.utils.putExtras
 import com.arnyminerz.library.kmconnector.ui.AppTheme
@@ -20,12 +22,14 @@ import java.util.UUID
 import kotlin.reflect.KClass
 
 actual abstract class DialogWindow actual constructor(
-    resizable: Boolean,
-    title: StringResource,
+    actual val resizable: Boolean,
+    actual val title: StringResource,
     actual val parentWindow: KClass<out RequestWindow>,
-    initialSize: DpSize
-) : CommonWindowInterface(resizable, title, mutableStateMapOf()) {
+    actual val initialSize: DpSize
+) : CommonWindowInterface, AppCompatActivity() {
     actual companion object : CommonDialogCompanion()
+
+    actual val extras: SnapshotStateMap<String, Any> = mutableStateMapOf()
 
     actual val visible: MutableState<Boolean> = mutableStateOf(false)
 
@@ -35,7 +39,7 @@ actual abstract class DialogWindow actual constructor(
     private var resultData: Map<String, Any> = emptyMap()
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
+        super<AppCompatActivity>.onCreate(savedInstanceState)
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             uuid = intent.extras?.getSerializable(EXTRA_UUID, UUID::class.java)!!

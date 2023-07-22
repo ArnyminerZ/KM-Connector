@@ -1,6 +1,7 @@
 package com.arnyminerz.library.kmconnector.ui.dialog
 
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.snapshots.SnapshotStateMap
 import androidx.compose.ui.unit.DpSize
 import com.arnyminerz.library.kmconnector.ui.dialog.data.DialogResult
 import com.arnyminerz.library.kmconnector.ui.window.CommonWindowInterface
@@ -15,6 +16,11 @@ expect abstract class DialogWindow(
     initialSize: DpSize = DpSize.Unspecified
 ): CommonWindowInterface {
     companion object: CommonDialogCompanion
+
+    val resizable: Boolean
+    val title: StringResource
+    val extras: SnapshotStateMap<String, Any>
+    val initialSize: DpSize
 
     val parentWindow: KClass<out RequestWindow>
 
