@@ -18,7 +18,7 @@ val androidCompileSdk: Int = (project.property("android.compileSdk") as String).
 val androidMinSdk: Int = (project.property("android.minSdk") as String).toInt()
 
 group = "com.arnyminerz.library.kmconnector"
-version = "1.0.0-dev"
+version = System.getenv("GIT_COMMIT")
 
 kotlin {
     android()
@@ -129,6 +129,9 @@ val javadocJar by tasks.registering(Jar::class) {
 
 publishing {
     publications.withType<MavenPublication> {
+        group = "com.arnyminerz.library.kmconnector"
+        version = System.getenv("GIT_COMMIT")
+
         artifact(javadocJar.get())
 
         pom {

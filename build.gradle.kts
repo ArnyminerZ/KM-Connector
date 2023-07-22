@@ -1,5 +1,5 @@
 group = "com.arnyminerz.library"
-version = "1.0-SNAPSHOT"
+version = System.getenv("GIT_COMMIT")
 
 allprojects {
     repositories {
