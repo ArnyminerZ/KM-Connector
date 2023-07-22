@@ -8,6 +8,7 @@ plugins {
     id("io.gitlab.arturbosch.detekt")
     id("dev.icerock.mobile.multiplatform-resources")
     id("com.codingfeline.buildkonfig")
+    `maven-publish`
 }
 
 val kotlinVersion: String = project.property("kotlin.version") as String
@@ -119,5 +120,35 @@ android {
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
+    }
+}
+
+val javadocJar by tasks.registering(Jar::class) {
+    archiveClassifier.set("javadoc")
+}
+
+publishing {
+    publications.withType<MavenPublication> {
+        artifact(javadocJar.get())
+
+        pom {
+            name.set("KM Connector")
+            description.set(
+                "A library that provides a way to have a common interface that connects different platforms."
+            )
+            url.set("https://github.com/ArnyminerZ/KM-Connector")
+            developers {
+                developer {
+                    id.set("arnyminerz")
+                    name.set("Arnau Mora")
+                    email.set("arnyminerz@proton.me")
+                }
+            }
+            scm {
+                connection.set("scm:git:git://github.com/ArnyminerZ/KM-Connector.git")
+                developerConnection.set("scm:git:ssh://github.com/ArnyminerZ/KM-Connector.git")
+                url.set("https://github.com/ArnyminerZ/KM-Connector")
+            }
+        }
     }
 }
