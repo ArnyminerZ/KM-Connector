@@ -1,27 +1,22 @@
-plugins {
-    kotlin("jvm") version "1.9.0"
-    application
-}
-
 group = "com.arnyminerz.library"
 version = "1.0-SNAPSHOT"
 
-repositories {
-    mavenCentral()
+allprojects {
+    repositories {
+        google()
+        mavenCentral()
+        maven("https://jitpack.io")
+        maven("https://maven.pkg.jetbrains.space/public/p/compose/dev")
+    }
 }
 
-dependencies {
-    testImplementation(kotlin("test"))
-}
-
-tasks.test {
-    useJUnitPlatform()
-}
-
-kotlin {
-    jvmToolchain(8)
-}
-
-application {
-    mainClass.set("MainKt")
+plugins {
+    kotlin("multiplatform") apply false
+    kotlin("android") apply false
+    id("com.android.application") apply false
+    id("com.android.library") apply false
+    id("org.jetbrains.compose") apply false
+    id("io.gitlab.arturbosch.detekt") apply false
+    id("dev.icerock.mobile.multiplatform-resources") apply false
+    id("com.codingfeline.buildkonfig") apply false
 }
