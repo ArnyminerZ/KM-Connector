@@ -11,7 +11,7 @@ expect abstract class RequestWindow(
 ) : CommonWindowInterface {
     companion object: CommonWindowCompanion
 
-    abstract val parentWindow: KClass<out RequestWindow>?
+    open val parentWindow: KClass<out RequestWindow>?
 
     open fun onBackRequested()
 

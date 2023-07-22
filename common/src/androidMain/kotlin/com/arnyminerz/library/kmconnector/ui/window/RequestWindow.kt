@@ -44,7 +44,7 @@ actual abstract class RequestWindow actual constructor(
         }
     }
 
-    actual abstract val parentWindow: KClass<out RequestWindow>?
+    actual open val parentWindow: KClass<out RequestWindow>? = null
 
     actual open fun onBackRequested() {
         setResult(Activity.RESULT_CANCELED)

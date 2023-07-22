@@ -22,7 +22,7 @@ actual abstract class RequestWindow actual constructor(
         onCreate()
     }
 
-    actual abstract val parentWindow: KClass<out RequestWindow>?
+    actual open val parentWindow: KClass<out RequestWindow>? = null
 
     /**
      * Used for closing the window through [displayingWindow]. Set by `WindowCompatibilityLayer`.
