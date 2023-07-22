@@ -1,10 +1,11 @@
 group = "com.arnyminerz.library"
-version = System.getenv("GIT_COMMIT")
+version = System.getenv("GIT_COMMIT") ?: "development"
 
 allprojects {
     repositories {
         google()
         mavenCentral()
+        mavenLocal()
         maven("https://jitpack.io")
         maven("https://maven.pkg.jetbrains.space/public/p/compose/dev")
     }
