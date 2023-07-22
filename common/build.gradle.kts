@@ -21,7 +21,9 @@ group = "com.arnyminerz.library.kmconnector"
 version = System.getenv("GIT_COMMIT") ?: "development"
 
 kotlin {
-    android()
+    android {
+        publishAllLibraryVariants()
+    }
 
     jvm("desktop") {
         jvmToolchain(17)
