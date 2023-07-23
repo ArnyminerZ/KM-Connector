@@ -7,6 +7,7 @@ plugins {
     id("com.android.library")
     id("io.gitlab.arturbosch.detekt")
     id("com.codingfeline.buildkonfig")
+    id("org.jetbrains.dokka")
     `maven-publish`
 }
 

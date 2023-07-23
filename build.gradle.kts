@@ -19,4 +19,9 @@ plugins {
     id("org.jetbrains.compose") apply false
     id("io.gitlab.arturbosch.detekt") apply false
     id("com.codingfeline.buildkonfig") apply false
+    id("org.jetbrains.dokka") apply false
+}
+
+subprojects {
+    apply(plugin = "org.jetbrains.dokka")
 }
