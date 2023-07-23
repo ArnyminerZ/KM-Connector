@@ -1,5 +1,12 @@
+import java.time.LocalDateTime
+
+fun getFallbackVersionName(): String {
+    val now = LocalDateTime.now()
+    return "${now.year}${now.monthValue}${now.dayOfYear}${now.hour}${now.minute}${now.second}-SNAPSHOT"
+}
+
 group = "com.arnyminerz.library"
-version = System.getenv("GIT_COMMIT") ?: "development"
+version = System.getenv("GIT_COMMIT") ?: getFallbackVersionName()
 
 allprojects {
     repositories {

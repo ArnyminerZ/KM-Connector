@@ -1,5 +1,13 @@
 import com.codingfeline.buildkonfig.compiler.FieldSpec.Type.STRING
+import org.jetbrains.dokka.gradle.DokkaTask
 import io.gitlab.arturbosch.detekt.Detekt
+import java.time.LocalDateTime
+import java.util.Properties
+
+fun getFallbackVersionName(): String {
+    val now = LocalDateTime.now()
+    return "${now.year}${now.monthValue}${now.dayOfYear}${now.hour}${now.minute}${now.second}-SNAPSHOT"
+}
 
 plugins {
     kotlin("multiplatform")
@@ -9,6 +17,7 @@ plugins {
     id("com.codingfeline.buildkonfig")
     id("org.jetbrains.dokka")
     `maven-publish`
+    signing
 }
 
 val kotlinVersion: String = project.property("kotlin.version") as String
@@ -18,7 +27,7 @@ val androidCompileSdk: Int = (project.property("android.compileSdk") as String).
 val androidMinSdk: Int = (project.property("android.minSdk") as String).toInt()
 
 group = "com.arnyminerz.library.kmconnector"
-version = System.getenv("GIT_COMMIT") ?: "development"
+version = System.getenv("GIT_COMMIT") ?: getFallbackVersionName()
 
 kotlin {
     android {
@@ -121,8 +130,20 @@ android {
     }
 }
 
+val dokkaOutputDir = "$buildDir/dokka"
+
+tasks.named("dokkaHtml", DokkaTask::class) {
+    outputDirectory.set(file(dokkaOutputDir))
+}
+
+val deleteDokkaOutputDir by tasks.register<Delete>("deleteDokkaOutputDirectory") {
+    delete(dokkaOutputDir)
+}
+
 val javadocJar by tasks.registering(Jar::class) {
+    dependsOn(deleteDokkaOutputDir, tasks.dokkaHtml)
     archiveClassifier.set("javadoc")
+    from(dokkaOutputDir)
 }
 
 fun MavenPublication.setPomInformation() {
@@ -132,6 +153,10 @@ fun MavenPublication.setPomInformation() {
             "A library that provides a way to have a common interface that connects different platforms."
         )
         url.set("https://github.com/ArnyminerZ/KM-Connector")
+        issueManagement {
+            system.set("Github")
+            url.set("https://github.com/Kodein-Framework/Kodein-DI/issues")
+        }
         developers {
             developer {
                 id.set("arnyminerz")
@@ -147,13 +172,36 @@ fun MavenPublication.setPomInformation() {
     }
 }
 
-publishing {
-    publications.withType<MavenPublication> {
-        group = "com.arnyminerz.library.kmconnector"
-        version = System.getenv("GIT_COMMIT") ?: "development"
+val localProperties = Properties().apply {
+    load(File(rootDir, "local.properties").inputStream())
+}
 
-        artifact(javadocJar.get())
+afterEvaluate {
+    publishing {
+        repositories {
+            maven {
+                name = "oss"
+                val repoId = localProperties.getProperty("SONATYPE_REPOSITORY_ID")
+                val releasesRepoUrl = uri("https://s01.oss.sonatype.org/service/local/staging/deployByRepositoryId/$repoId/")
+                val snapshotsRepoUrl = uri("https://s01.oss.sonatype.org/content/repositories/snapshots/")
+                url = if (version.toString().endsWith("SNAPSHOT")) snapshotsRepoUrl else releasesRepoUrl
+                credentials {
+                    username = localProperties.getProperty("SONATYPE_USERNAME")
+                    password = localProperties.getProperty("SONATYPE_PASSWORD")
+                }
+            }
+        }
+        publications.create("release", MavenPublication::class.java) {
+            group = "com.arnyminerz.library.kmconnector"
+            version = System.getenv("GIT_COMMIT") ?: getFallbackVersionName()
 
-        setPomInformation()
+            artifact(javadocJar.get())
+
+            setPomInformation()
+        }
+    }
+    signing {
+        useGpgCmd()
+        sign(publishing.publications["release"])
     }
 }
